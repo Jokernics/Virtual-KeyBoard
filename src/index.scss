@@ -1,0 +1,78 @@
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+.text-area {
+  display: block;
+  width: 700px;
+  height: 200px;
+  margin: 10px auto 10px;
+  padding: 10px;
+  font-size: 18px;
+  color: #444444;
+}
+
+
+.keyboard-container {
+  margin: 0 auto;
+  padding: 6px;
+  gap: 6px;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  border: 3px solid #222222;
+  border-radius: 5px;
+  background: #888888;
+
+  
+  .row {
+    display: flex;
+    gap: 6px;
+
+    .key {
+      width: 40px;
+      height: 40px;
+      background: #444444;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: border-radius 0.3s, background-color 0.3s;
+
+      
+
+      &:hover {
+        background:#79aa89
+      }
+
+      &.active {
+        background-color:#2cfd72;
+        border-radius:50px
+      }
+
+      &[data-code="Backspace"],
+      &[data-code="Capslock"],
+      &[data-code="ShiftLeft"] {
+        width: 100px;
+      }
+      &[data-code="Tab"] {
+        width: 50px;
+      }
+      &[data-code="Backspace"] {
+        width: 100px;
+      }
+      &[data-code="Delete"] {
+        width: 44px;
+      }
+      &[data-code="Enter"],
+      &[data-code="ShiftRight"] {
+        width: 86px;
+      }
+      &[data-code="Space"] {
+        width: 330px;
+      }
+    }
+  }
+}
