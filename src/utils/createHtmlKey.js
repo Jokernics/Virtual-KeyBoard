@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import {
   line1, line2, line3, line4, line5,
 } from '../bd';
@@ -41,11 +42,14 @@ export function createKeyboard(lang, register) {
   body.appendChild(keyboardContainer);
 }
 
-export function refreshKeyboard(lang, register) {
+export function refreshKeyboard(lang, register, capslock = false) {
   const keys = document.querySelectorAll('.key');
 
   keys.forEach((key) => {
-    // eslint-disable-next-line no-param-reassign
-    key.textContent = lines[key.dataset.code][lang][register];
+    if (capslock) {
+      if (!key.dataset.isnochar) key.textContent = key.textContent.toUpperCase();
+    } else {
+      key.textContent = lines[key.dataset.code][lang][register];
+    }
   });
 }

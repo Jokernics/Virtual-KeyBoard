@@ -4,14 +4,16 @@ import './index.scss';
 const { body } = document;
 
 const textArea = document.createElement('textarea');
+
 const keyboardContainer = document.createElement('div');
 keyboardContainer.className = 'keyboard-container';
 textArea.className = 'text-area';
 body.appendChild(textArea);
-let isUpperCase = false;
+const isUpperCase = { ShiftLeft: false, ShiftRight: false, CapsLock: false };
+const langKeys = { ControlLeft: false, AltLeft: false };
 
 let lang = localStorage.getItem('lang') || 'RU';
-let register = localStorage.getItem('register') || 'down';
+let register = 'down';
 createKeyboard(lang, register);
 
 function addChar(string, char, position, range) {
@@ -20,86 +22,137 @@ function addChar(string, char, position, range) {
   return chandedString.join('');
 }
 
-function triggerMouseDown(event) {
+let touches = [];
+function checkMultipleTouches(code) {
+  const validCodes = ['ControlLeft', 'AltLeft'];
+  if (validCodes.some((i) => i === code)) {
+    if (touches.some((i) => i === code)) {
+      touches = touches.filter((key) => key !== code);
+    } else {
+      touches.push(code);
+    }
+  }
+
+  if (touches.length === 2) {
+    lang = lang === 'RU' ? 'EN' : 'RU';
+    localStorage.setItem('lang', lang);
+    refreshKeyboard(lang, register);
+    touches = [];
+    langKeys.ControlLeft = false;
+    langKeys.AltLeft = false;
+  }
+}
+
+function triggerKeyDown(event) {
   event.preventDefault();
-  event.currentTarget.classList.add('active');
+  const code = event.currentTarget.dataset.code || event.code;
+  const currentPressedKey = document.querySelector(`[data-code=${code}]`);
   const cursor = textArea.selectionStart;
   const range = textArea.selectionEnd - textArea.selectionStart;
 
-  if (!event.target.dataset.isnochar) {
-    textArea.value = addChar(textArea.value, event.target.textContent, cursor, range);
+  currentPressedKey.classList.add('active');
+
+  if (!currentPressedKey.dataset.isnochar) {
+    textArea.value = addChar(textArea.value, currentPressedKey.textContent, cursor, range);
     textArea.setSelectionRange(cursor + 1, cursor + 1);
   } else {
-    switch (event.target.dataset.code) {
+    switch (code) {
+      case ('ControlLeft'):
+        langKeys.ControlLeft = true;
+        break;
+      case ('AltLeft'):
+        langKeys.AltLeft = true;
+        break;
       case ('Space'):
         textArea.value = addChar(textArea.value, ' ', cursor, range);
+        textArea.setSelectionRange(cursor + 1, cursor + 1);
+        break;
+      case ('Enter'):
+        textArea.value = addChar(textArea.value, '\n', cursor, range);
+        textArea.setSelectionRange(cursor + 1, cursor + 1);
         break;
       case ('Backspace'):
+        if (cursor === 0 && range === 0) break;
         if (range !== 0) {
           textArea.value = addChar(textArea.value, '', cursor, range);
+          textArea.setSelectionRange(cursor, cursor);
           break;
         } else {
           textArea.value = addChar(textArea.value, '', cursor - 1, range + 1);
+          textArea.setSelectionRange(cursor - 1, cursor - 1);
         }
         break;
       case ('ShiftLeft'):
-        isUpperCase = !isUpperCase;
+        isUpperCase.ShiftLeft = !isUpperCase.ShiftLeft;
         break;
-      case ('Capslock'):
-        isUpperCase = !isUpperCase;
+      case ('CapsLock'):
+        isUpperCase.CapsLock = !isUpperCase.CapsLock;
         break;
       case ('ShiftRight'):
-        isUpperCase = !isUpperCase;
+        isUpperCase.ShiftRight = !isUpperCase.ShiftRight;
+        break;
+      case ('Tab'):
+        textArea.value = addChar(textArea.value, '\t', cursor, range);
         break;
       case ('Delete'):
-        if (range !== 0) {
+        if (cursor === (textArea.value.length) && range === 0) {
+          break;
+        } else if (cursor === 0 && range === 0) {
+          textArea.value = addChar(textArea.value, '', cursor, range + 1);
+          textArea.setSelectionRange(cursor, cursor);
+          break;
+        } else if (range !== 0) {
           textArea.value = addChar(textArea.value, '', cursor, range);
+          textArea.setSelectionRange(cursor, cursor);
           break;
         } else {
           textArea.value = addChar(textArea.value, '', cursor, range + 1);
+          textArea.setSelectionRange(cursor, cursor);
+          break;
         }
-        break;
-      case ('Enter'):
-        textArea.value += '\n';
-        break;
       default:
         break;
     }
   }
-  register = (isUpperCase) ? 'Up' : 'down';
-  refreshKeyboard(lang, register);
+
+  if (isUpperCase.CapsLock) {
+    refreshKeyboard(lang, register, 'Caps pressed');
+  } else {
+    refreshKeyboard(lang, register);
+  }
   textArea.focus();
+
+  checkMultipleTouches(code);
 }
 
 const keys = document.querySelectorAll('.key');
 
 keys.forEach((key) => {
-  key.addEventListener('mousedown', triggerMouseDown);
+  key.addEventListener('mousedown', triggerKeyDown);
 });
 
-window.addEventListener('mouseup', () => {
+function triggerKeyUp() {
   keys.forEach((item) => {
     item.classList.remove('active');
   });
 
-  // if (isCapsLock) {
-  //   document.querySelector('[data-code="Capslock"').classList.add('active');
-  // }
-  // if (isShiftPressed) {
-  //   document.querySelector('[data-code="Capslock"').classList.add('active');
-  // }
-});
-
-textArea.addEventListener('keydown', (e) => {
-  const { code } = e;
-  if (!document.querySelector(`[data-code=${code}]`)) return;
-  const pressedKey = document.querySelector(`[data-code=${code}]`);
-  pressedKey.classList.add('active');
-});
+  Object.keys(isUpperCase).forEach((pressedKey) => {
+    if (isUpperCase[pressedKey]) {
+      document.querySelector(`[data-code=${pressedKey}]`).classList.add('active');
+    }
+  });
+  Object.keys(langKeys).forEach((pressedKey) => {
+    if (langKeys[pressedKey]) {
+      document.querySelector(`[data-code=${pressedKey}]`).classList.add('active');
+    }
+  });
+}
+window.addEventListener('mouseup', triggerKeyUp);
+textArea.addEventListener('keydown', triggerKeyDown);
 
 textArea.addEventListener('keyup', (e) => {
   const { code } = e;
-  if (!document.querySelector(`[data-code=${code}]`)) return;
-  const pressedKey = document.querySelector(`[data-code=${code}]`);
-  pressedKey.classList.remove('active');
+  keys.forEach((key) => {
+    if (key.dataset.code === code) key.classList.remove('active');
+  });
 });

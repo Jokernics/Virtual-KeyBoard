@@ -10,8 +10,11 @@ html {
   padding: 10px;
   font-size: 18px;
   color: #444444;
+  resize: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
-
 
 .keyboard-container {
   margin: 0 auto;
@@ -53,7 +56,7 @@ html {
       }
 
       &[data-code="Backspace"],
-      &[data-code="Capslock"],
+      &[data-code="CapsLock"],
       &[data-code="ShiftLeft"] {
         width: 100px;
       }
