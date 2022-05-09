@@ -58,6 +58,7 @@ function triggerKeyDown(event) {
   const keyCode = event.code;
   const code = mouseCode || keyCode;
   const currentPressedKey = document.querySelector(`[data-code=${code}]`);
+  if (!currentPressedKey) return;
   const cursor = textArea.selectionStart;
   const range = textArea.selectionEnd - textArea.selectionStart;
 
@@ -143,13 +144,12 @@ function triggerKeyDown(event) {
   const shiftPresed = !!((isUpperCase.ShiftLeft || isUpperCase.ShiftRight));
   register = shiftPresed ? 'Up' : 'down';
   refreshKeyboard(lang, register);
-  if (isUpperCase.CapsLock) {
-    refreshKeyboard(lang, register, 'Caps pressed');
-  }
   textArea.focus();
 
   checkMultipleTouches(code);
-  
+  if (isUpperCase.CapsLock) {
+    refreshKeyboard(lang, register, 'Caps pressed');
+  }
 }
 
 const keys = document.querySelectorAll('.key');
@@ -195,7 +195,6 @@ textArea.addEventListener('keyup', (e) => {
     isUpperCase.ShiftRight = false;
   }
 
-  langKeys.AltLeft = false;
-  langKeys.ControlLeft = false;
+  langKeys = { ControlLeft: false, AltLeft: false };
   touches = [];
 });

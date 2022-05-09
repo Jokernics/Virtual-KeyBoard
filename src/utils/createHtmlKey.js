@@ -7,14 +7,23 @@ const lines = {
   ...line1, ...line2, ...line3, ...line4, ...line5,
 };
 
-export function createHtmlKey(obj, code, lang, register) {
-  const htmlKey = document.createElement('div');
-  htmlKey.className = 'key';
-  htmlKey.dataset.code = code;
-  if (obj[code].isNoChar) htmlKey.dataset.isnochar = true;
-  htmlKey.textContent = obj[code][lang][register];
+class Key {
+  constructor(obj, code, lang, register) {
+    this.obj = obj;
+    this.code = code;
+    this.lang = lang;
+    this.register = register;
+  }
 
-  return htmlKey;
+  createHtmlKey() {
+    const htmlKey = document.createElement('div');
+    htmlKey.className = 'key';
+    htmlKey.dataset.code = this.code;
+    if (this.obj[this.code].isNoChar) htmlKey.dataset.isnochar = true;
+    htmlKey.textContent = this.obj[this.code][this.lang][this.register];
+
+    return htmlKey;
+  }
 }
 
 export function createRow(obj, parent, lang, register) {
@@ -22,7 +31,8 @@ export function createRow(obj, parent, lang, register) {
   row.className = 'row';
 
   Object.keys(obj).forEach((code) => {
-    row.appendChild(createHtmlKey(obj, code, lang, register, register));
+    const key = new Key(obj, code, lang, register, register);
+    row.appendChild(key.createHtmlKey());
   });
 
   parent.appendChild(row);
