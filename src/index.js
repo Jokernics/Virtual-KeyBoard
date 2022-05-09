@@ -166,8 +166,6 @@ function triggerKeyUp() {
   Object.keys(isUpperCase).forEach((pressedKey) => {
     if (isUpperCase[pressedKey]) {
       document.querySelector(`[data-code=${pressedKey}]`).classList.add('active');
-      isUpperCase.ShiftLeft = false;
-      isUpperCase.ShiftRight = false;
     }
   });
   Object.keys(langKeys).forEach((pressedKey) => {
