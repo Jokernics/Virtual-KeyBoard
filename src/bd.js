@@ -257,7 +257,7 @@ const line2 = {
   BracketLeft: {
     EN: {
       down: '[',
-      Up: '[',
+      Up: '{',
     },
     RU: {
       down: 'х',
@@ -267,7 +267,7 @@ const line2 = {
   BracketRight: {
     EN: {
       down: ']',
-      Up: ']',
+      Up: '}',
     },
     RU: {
       down: 'ъ',
@@ -277,11 +277,11 @@ const line2 = {
   Backslash: {
     EN: {
       down: '\\',
-      Up: '\\',
+      Up: '|',
     },
     RU: {
       down: '\\',
-      Up: '\\',
+      Up: '/',
     },
   },
   Delete: {
@@ -402,7 +402,7 @@ const line3 = {
   Semicolon: {
     EN: {
       down: ';',
-      Up: ';',
+      Up: ':',
     },
     RU: {
       down: 'ж',
@@ -412,7 +412,7 @@ const line3 = {
   Quote: {
     EN: {
       down: "'",
-      Up: "'",
+      Up: '"',
     },
     RU: {
       down: 'э',
@@ -517,7 +517,7 @@ const line4 = {
   Comma: {
     EN: {
       down: ',',
-      Up: ',',
+      Up: '<',
     },
     RU: {
       down: 'б',
@@ -527,7 +527,7 @@ const line4 = {
   Period: {
     EN: {
       down: '.',
-      Up: '.',
+      Up: '>',
     },
     RU: {
       down: 'ю',
@@ -537,11 +537,11 @@ const line4 = {
   Slash: {
     EN: {
       down: '/',
-      Up: '/',
+      Up: '?',
     },
     RU: {
       down: '.',
-      Up: '.',
+      Up: ',',
     },
   },
   ArrowUp: {
