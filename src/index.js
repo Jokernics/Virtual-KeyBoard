@@ -61,7 +61,8 @@ function triggerKeyDown(event) {
   if (!currentPressedKey) return;
   const cursor = textArea.selectionStart;
   const range = textArea.selectionEnd - textArea.selectionStart;
-  if (mouseCode && (mouseCode !== 'ShiftLeft' || mouseCode !== 'ShiftRight')) {
+  if (mouseCode && (mouseCode !== 'ShiftLeft' && mouseCode !== 'ShiftRight')) {
+    console.log(mouseCode);
     isUpperCase.ShiftLeft = false;
     isUpperCase.ShiftRight = false;
   }
@@ -162,7 +163,7 @@ keys.forEach((key) => {
   key.addEventListener('mousedown', triggerKeyDown);
 });
 
-function triggerKeyUp() {
+function triggerMouseUp() {
   keys.forEach((item) => {
     item.classList.remove('active');
   });
@@ -180,7 +181,7 @@ function triggerKeyUp() {
   });
 }
 
-window.addEventListener('mouseup', triggerKeyUp);
+window.addEventListener('mouseup', triggerMouseUp);
 textArea.addEventListener('keydown', triggerKeyDown);
 
 textArea.addEventListener('keyup', (e) => {
@@ -189,13 +190,18 @@ textArea.addEventListener('keyup', (e) => {
     if (key.dataset.code === code) key.classList.remove('active');
     if (isUpperCase.CapsLock && key.dataset.code === 'CapsLock') key.classList.add('active');
   });
+  const shiftPresed = !!((isUpperCase.ShiftLeft || isUpperCase.ShiftRight));
 
   if (code === 'ShiftLeft' || code === 'ShiftRight') {
-    if (!isUpperCase.CapsLock) register = 'down';
-    refreshKeyboard(lang, register);
+    register = !isUpperCase.CapsLock ? 'down' : 'Up';
+
+    register = shiftPresed ? 'down' : 'Up';
+
     isUpperCase.ShiftLeft = false;
     isUpperCase.ShiftRight = false;
+    refreshKeyboard(lang, register);
   }
+  if (isUpperCase.CapsLock) refreshKeyboard(lang, register, isUpperCase.CapsLock);
 
   langKeys = { ControlLeft: false, AltLeft: false };
   touches = [];
