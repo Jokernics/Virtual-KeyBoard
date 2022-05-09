@@ -3,6 +3,12 @@ import './index.scss';
 
 const { body } = document;
 
+const h1 = document.createElement('h1');
+const h3 = document.createElement('h3');
+h1.textContent = 'Virtual Keyboard';
+h3.innerHTML = 'Windows<br>Change language: Lctrl + Lalt';
+body.appendChild(h1);
+
 const textArea = document.createElement('textarea');
 
 const keyboardContainer = document.createElement('div');
@@ -15,6 +21,7 @@ const langKeys = { ControlLeft: false, AltLeft: false };
 let lang = localStorage.getItem('lang') || 'RU';
 let register = 'down';
 createKeyboard(lang, register);
+body.appendChild(h3);
 
 function addChar(string, char, position, range) {
   const chandedString = string.split('').slice();
@@ -31,6 +38,8 @@ function checkMultipleTouches(code) {
     } else {
       touches.push(code);
     }
+  } else {
+    touches = [];
   }
 
   if (touches.length === 2) {
@@ -45,12 +54,16 @@ function checkMultipleTouches(code) {
 
 function triggerKeyDown(event) {
   event.preventDefault();
-  const code = event.currentTarget.dataset.code || event.code;
+  const mouseCode = event.currentTarget.dataset.code;
+  const keyCode = event.code;
+  const code = mouseCode || keyCode;
   const currentPressedKey = document.querySelector(`[data-code=${code}]`);
   const cursor = textArea.selectionStart;
   const range = textArea.selectionEnd - textArea.selectionStart;
 
   currentPressedKey.classList.add('active');
+
+  
 
   if (!currentPressedKey.dataset.isnochar) {
     textArea.value = addChar(textArea.value, currentPressedKey.textContent, cursor, range);
@@ -58,10 +71,10 @@ function triggerKeyDown(event) {
   } else {
     switch (code) {
       case ('ControlLeft'):
-        langKeys.ControlLeft = true;
+        langKeys.ControlLeft = !langKeys.ControlLeft;
         break;
       case ('AltLeft'):
-        langKeys.AltLeft = true;
+        langKeys.AltLeft = !langKeys.AltLeft;
         break;
       case ('Space'):
         textArea.value = addChar(textArea.value, ' ', cursor, range);
@@ -94,6 +107,22 @@ function triggerKeyDown(event) {
       case ('Tab'):
         textArea.value = addChar(textArea.value, '\t', cursor, range);
         break;
+      case ('ArrowUp'):
+        textArea.value = addChar(textArea.value, currentPressedKey.textContent, cursor, range);
+        textArea.setSelectionRange(cursor + 1, cursor + 1);
+        break;
+      case ('ArrowDown'):
+        textArea.value = addChar(textArea.value, currentPressedKey.textContent, cursor, range);
+        textArea.setSelectionRange(cursor + 1, cursor + 1);
+        break;
+      case ('ArrowLeft'):
+        textArea.value = addChar(textArea.value, currentPressedKey.textContent, cursor, range);
+        textArea.setSelectionRange(cursor + 1, cursor + 1);
+        break;
+      case ('ArrowRight'):
+        textArea.value = addChar(textArea.value, currentPressedKey.textContent, cursor, range);
+        textArea.setSelectionRange(cursor + 1, cursor + 1);
+        break;
       case ('Delete'):
         if (cursor === (textArea.value.length) && range === 0) {
           break;
@@ -123,6 +152,10 @@ function triggerKeyDown(event) {
   textArea.focus();
 
   checkMultipleTouches(code);
+  // if (mouseCode === 'ShiftLeft' || mouseCode === 'ShiftRight') {
+    // isUpperCase.ShiftLeft = false;
+    // isUpperCase.ShiftRight = false;
+  // }
 }
 
 const keys = document.querySelectorAll('.key');
@@ -139,6 +172,8 @@ function triggerKeyUp() {
   Object.keys(isUpperCase).forEach((pressedKey) => {
     if (isUpperCase[pressedKey]) {
       document.querySelector(`[data-code=${pressedKey}]`).classList.add('active');
+      isUpperCase.ShiftLeft = false;
+      isUpperCase.ShiftRight = false;
     }
   });
   Object.keys(langKeys).forEach((pressedKey) => {
@@ -147,6 +182,7 @@ function triggerKeyUp() {
     }
   });
 }
+
 window.addEventListener('mouseup', triggerKeyUp);
 textArea.addEventListener('keydown', triggerKeyDown);
 
@@ -163,4 +199,8 @@ textArea.addEventListener('keyup', (e) => {
     isUpperCase.ShiftLeft = false;
     isUpperCase.ShiftRight = false;
   }
+
+  langKeys.AltLeft = false;
+  langKeys.ControlLeft = false;
+  touches = [];
 });

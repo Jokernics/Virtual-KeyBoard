@@ -2,6 +2,15 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+body {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+h3 {
+  text-align: center;
+}
 .text-area {
   display: block;
   width: 700px;
@@ -27,7 +36,6 @@ html {
   border-radius: 5px;
   background: #888888;
 
-  
   .row {
     display: flex;
     gap: 6px;
@@ -45,15 +53,6 @@ html {
       transition: border-radius 0.3s, background-color 0.3s;
 
       
-
-      &:hover {
-        background:#79aa89
-      }
-
-      &.active {
-        background-color:#2cfd72;
-        border-radius:50px
-      }
 
       &[data-code="Backspace"],
       &[data-code="CapsLock"],
@@ -75,6 +74,18 @@ html {
       }
       &[data-code="Space"] {
         width: 330px;
+      }
+
+      &[data-isnochar] {
+        background: black;
+      }
+
+      &:hover {
+        background: #79aa89;
+      }
+      &.active {
+        background-color: #2cfd72;
+        border-radius: 50px;
       }
     }
   }

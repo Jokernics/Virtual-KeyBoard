@@ -545,6 +545,7 @@ const line4 = {
     },
   },
   ArrowUp: {
+    isNoChar: true,
     EN: {
       down: '\u2191',
       Up: '\u2191',
@@ -624,6 +625,7 @@ const line5 = {
     },
   },
   ArrowLeft: {
+    isNoChar: true,
     EN: {
       down: '\u2190',
       Up: '\u2190',
@@ -634,6 +636,7 @@ const line5 = {
     },
   },
   ArrowDown: {
+    isNoChar: true,
     EN: {
       down: '\u2193',
       Up: '\u2193',
@@ -644,6 +647,7 @@ const line5 = {
     },
   },
   ArrowRight: {
+    isNoChar: true,
     EN: {
       down: '\u2192',
       Up: '\u2192',
