@@ -16,7 +16,7 @@ keyboardContainer.className = 'keyboard-container';
 textArea.className = 'text-area';
 body.appendChild(textArea);
 const isUpperCase = { ShiftLeft: false, ShiftRight: false, CapsLock: false };
-const langKeys = { ControlLeft: false, AltLeft: false };
+let langKeys = { ControlLeft: false, AltLeft: false };
 
 let lang = localStorage.getItem('lang') || 'RU';
 let register = 'down';
@@ -62,9 +62,6 @@ function triggerKeyDown(event) {
   const range = textArea.selectionEnd - textArea.selectionStart;
 
   currentPressedKey.classList.add('active');
-
-  
-
   if (!currentPressedKey.dataset.isnochar) {
     textArea.value = addChar(textArea.value, currentPressedKey.textContent, cursor, range);
     textArea.setSelectionRange(cursor + 1, cursor + 1);
@@ -152,10 +149,7 @@ function triggerKeyDown(event) {
   textArea.focus();
 
   checkMultipleTouches(code);
-  // if (mouseCode === 'ShiftLeft' || mouseCode === 'ShiftRight') {
-    // isUpperCase.ShiftLeft = false;
-    // isUpperCase.ShiftRight = false;
-  // }
+  
 }
 
 const keys = document.querySelectorAll('.key');
@@ -179,6 +173,7 @@ function triggerKeyUp() {
   Object.keys(langKeys).forEach((pressedKey) => {
     if (langKeys[pressedKey]) {
       document.querySelector(`[data-code=${pressedKey}]`).classList.add('active');
+      langKeys = { ControlLeft: false, AltLeft: false };
     }
   });
 }
