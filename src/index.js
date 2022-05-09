@@ -62,7 +62,6 @@ function triggerKeyDown(event) {
   const cursor = textArea.selectionStart;
   const range = textArea.selectionEnd - textArea.selectionStart;
   if (mouseCode && (mouseCode !== 'ShiftLeft' && mouseCode !== 'ShiftRight')) {
-    console.log(mouseCode);
     isUpperCase.ShiftLeft = false;
     isUpperCase.ShiftRight = false;
   }
