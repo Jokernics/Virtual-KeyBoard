@@ -114,11 +114,11 @@ function triggerKeyDown(event) {
         break;
     }
   }
-
+  const shiftPresed = !!((isUpperCase.ShiftLeft || isUpperCase.ShiftRight));
+  register = shiftPresed ? 'Up' : 'down';
+  refreshKeyboard(lang, register);
   if (isUpperCase.CapsLock) {
     refreshKeyboard(lang, register, 'Caps pressed');
-  } else {
-    refreshKeyboard(lang, register);
   }
   textArea.focus();
 
@@ -154,5 +154,13 @@ textArea.addEventListener('keyup', (e) => {
   const { code } = e;
   keys.forEach((key) => {
     if (key.dataset.code === code) key.classList.remove('active');
+    if (isUpperCase.CapsLock && key.dataset.code === 'CapsLock') key.classList.add('active');
   });
+
+  if (code === 'ShiftLeft' || code === 'ShiftRight') {
+    if (!isUpperCase.CapsLock) register = 'down';
+    refreshKeyboard(lang, register);
+    isUpperCase.ShiftLeft = false;
+    isUpperCase.ShiftRight = false;
+  }
 });

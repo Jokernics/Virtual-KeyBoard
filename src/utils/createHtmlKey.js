@@ -44,10 +44,20 @@ export function createKeyboard(lang, register) {
 
 export function refreshKeyboard(lang, register, capslock = false) {
   const keys = document.querySelectorAll('.key');
-
   keys.forEach((key) => {
+    function toggleCapsLock() {
+      if (register === 'Up') {
+        key.textContent = key.textContent.toLowerCase();
+      } else {
+        key.textContent = key.textContent.toUpperCase();
+      }
+    }
     if (capslock) {
-      if (!key.dataset.isnochar) key.textContent = key.textContent.toUpperCase();
+      if (!key.dataset.isnochar) {
+        toggleCapsLock();
+      } else {
+        key.textContent = lines[key.dataset.code][lang][register];
+      }
     } else {
       key.textContent = lines[key.dataset.code][lang][register];
     }
