@@ -1,6 +1,5 @@
 import { createKeyboard, refreshKeyboard } from './utils/createHtmlKey';
 import './index.scss';
-import getPosition, { setMatrix } from './utils/getMatrixParamets';
 
 const { body } = document;
 
@@ -16,7 +15,6 @@ const keyboardContainer = document.createElement('div');
 keyboardContainer.className = 'keyboard-container';
 textArea.className = 'text-area';
 body.appendChild(textArea);
-textArea.focus()
 const isUpperCase = { ShiftLeft: false, ShiftRight: false, CapsLock: false };
 let langKeys = { ControlLeft: false, AltLeft: false };
 
@@ -61,7 +59,7 @@ function triggerKeyDown(event) {
   const code = mouseCode || keyCode;
   const currentPressedKey = document.querySelector(`[data-code=${code}]`);
   if (!currentPressedKey) return;
-  let cursor = textArea.selectionStart;
+  const cursor = textArea.selectionStart;
   const range = textArea.selectionEnd - textArea.selectionStart;
   if (mouseCode && (mouseCode !== 'ShiftLeft' && mouseCode !== 'ShiftRight')) {
     isUpperCase.ShiftLeft = false;
@@ -73,10 +71,6 @@ function triggerKeyDown(event) {
     textArea.value = addChar(textArea.value, currentPressedKey.textContent, cursor, range);
     textArea.setSelectionRange(cursor + 1, cursor + 1);
   } else {
-    let matrix = setMatrix(textArea.value)
-        
-    let {aboveCursor, underCursor} = getPosition(matrix, cursor)
-
     switch (code) {
       case ('ControlLeft'):
         langKeys.ControlLeft = !langKeys.ControlLeft;
@@ -116,18 +110,19 @@ function triggerKeyDown(event) {
         textArea.value = addChar(textArea.value, '\t', cursor, range);
         break;
       case ('ArrowUp'):
-        cursor = aboveCursor;
-        textArea.setSelectionRange(cursor, cursor);
+        textArea.value = addChar(textArea.value, currentPressedKey.textContent, cursor, range);
+        textArea.setSelectionRange(cursor + 1, cursor + 1);
         break;
       case ('ArrowDown'):
-        cursor = underCursor
-        textArea.setSelectionRange(cursor, cursor);
+        textArea.value = addChar(textArea.value, currentPressedKey.textContent, cursor, range);
+        textArea.setSelectionRange(cursor + 1, cursor + 1);
         break;
       case ('ArrowLeft'):
-        if (cursor === 0) break;
-        textArea.setSelectionRange(cursor - 1, cursor - 1);
+        textArea.value = addChar(textArea.value, currentPressedKey.textContent, cursor, range);
+        textArea.setSelectionRange(cursor + 1, cursor + 1);
         break;
       case ('ArrowRight'):
+        textArea.value = addChar(textArea.value, currentPressedKey.textContent, cursor, range);
         textArea.setSelectionRange(cursor + 1, cursor + 1);
         break;
       case ('Delete'):
