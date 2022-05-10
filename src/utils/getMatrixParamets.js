@@ -1,3 +1,26 @@
+export function setMatrix(string) {
+  if (string.length > 70) {
+    let array = string.split('');
+    for (let i = 0; i < array.length; i++) {
+      if (i / 70 === 0) {
+        if (array[i] === '\n') continue;
+        array.splice(i, 0, '\n')
+      }
+    }
+  return string.split('\n')
+    .map(i => {
+      i = i.split('')
+      i.push('end')
+      return i
+    })
+  // return string.split('\n')
+  //   .map(i => {
+  //     i = i.split('')
+  //     i.push('end')
+  //     return i
+  //   })
+}
+
 export default function getPosition(matrix, cursor) {
   let rangeFromStart = 0;
   let underRowRange = 0;
@@ -33,38 +56,4 @@ export default function getPosition(matrix, cursor) {
       position++
     }
   }
-}
-
-export function setMatrix(string) {
-  if (string.length > 70) {
-    let array = string.split('');
-    let newArr = [];
-    let count = 0;
-    for (let i = 0; i < array.length; i++) {
-      count++
-      if (array[i] === '\n') {
-        count = 0;
-        continue
-      } else if (count % 70 === 0) {
-        newArr.push('\n')
-        count = 0;
-      }
-      newArr.push(array[i])
-    }
-  console.log(newArr) 
-    string = newArr.join('')   
-  }
-  return string.split('\n')
-    .map(i => {
-      i = i.split('')
-      i.push('end')
-      return i
-    })
-    
-  // return string.split('\n')
-  //   .map(i => {
-  //     i = i.split('')
-  //     i.push('end')
-  //     return i
-  //   })
 }
