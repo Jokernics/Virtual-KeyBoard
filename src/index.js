@@ -71,6 +71,10 @@ function triggerKeyDown(event) {
   currentPressedKey.classList.add('active');
   if (!currentPressedKey.dataset.isnochar) {
     textArea.value = addChar(textArea.value, currentPressedKey.textContent, cursor, range);
+    // if (textArea.value.length % 70 === 0) {
+    //   textArea.value = addChar(textArea.value, '\n', cursor, range);
+    //   console.log('Добавлен ')
+    // }
     textArea.setSelectionRange(cursor + 1, cursor + 1);
   } else {
     let matrix = setMatrix(textArea.value)
