@@ -113,9 +113,11 @@ function triggerKeyDown(event) {
         break;
       case ('ArrowUp'):
         selection.modify('move', 'backward', 'line');
+        textArea.setSelectionRange(cursor, cursor);
         break;
       case ('ArrowDown'):
         selection.modify('move', 'forward', 'line');
+        textArea.setSelectionRange(cursor, cursor);
         break;
       case ('ArrowLeft'):
         selection.modify('move', 'left', 'character');
