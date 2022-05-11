@@ -109,6 +109,7 @@ function triggerKeyDown(event) {
         break;
       case ('Tab'):
         textArea.value = addChar(textArea.value, '\t', cursor, range);
+        textArea.setSelectionRange(cursor + 1, cursor + 1);
         break;
       case ('ArrowUp'):
         selection.modify('move', 'backward', 'line');
