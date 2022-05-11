@@ -10,7 +10,6 @@
 
 # production
 /dist
-/src
 webpack.prod.js
 webpack.dev.js
 webpack.common.js
