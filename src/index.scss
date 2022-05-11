@@ -20,6 +20,9 @@ h3 {
   font-size: 18px;
   color: #444444;
   resize: none;
+  word-break: break-all;
+  overflow-x: scroll;
+
   &::-webkit-scrollbar {
     display: none;
   }

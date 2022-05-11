@@ -1,5 +1,5 @@
-import { createKeyboard, refreshKeyboard } from './utils/createHtmlKey';
 import './index.scss';
+import { createKeyboard, refreshKeyboard } from './utils/createHtmlKey';
 
 const { body } = document;
 
@@ -15,6 +15,7 @@ const keyboardContainer = document.createElement('div');
 keyboardContainer.className = 'keyboard-container';
 textArea.className = 'text-area';
 body.appendChild(textArea);
+textArea.focus();
 const isUpperCase = { ShiftLeft: false, ShiftRight: false, CapsLock: false };
 let langKeys = { ControlLeft: false, AltLeft: false };
 
@@ -54,6 +55,7 @@ function checkMultipleTouches(code) {
 
 function triggerKeyDown(event) {
   event.preventDefault();
+  const selection = window.getSelection();
   const mouseCode = event.currentTarget.dataset.code;
   const keyCode = event.code;
   const code = mouseCode || keyCode;
@@ -65,7 +67,6 @@ function triggerKeyDown(event) {
     isUpperCase.ShiftLeft = false;
     isUpperCase.ShiftRight = false;
   }
-
   currentPressedKey.classList.add('active');
   if (!currentPressedKey.dataset.isnochar) {
     textArea.value = addChar(textArea.value, currentPressedKey.textContent, cursor, range);
@@ -110,20 +111,16 @@ function triggerKeyDown(event) {
         textArea.value = addChar(textArea.value, '\t', cursor, range);
         break;
       case ('ArrowUp'):
-        textArea.value = addChar(textArea.value, currentPressedKey.textContent, cursor, range);
-        textArea.setSelectionRange(cursor + 1, cursor + 1);
+        selection.modify('move', 'backward', 'line');
         break;
       case ('ArrowDown'):
-        textArea.value = addChar(textArea.value, currentPressedKey.textContent, cursor, range);
-        textArea.setSelectionRange(cursor + 1, cursor + 1);
+        selection.modify('move', 'forward', 'line');
         break;
       case ('ArrowLeft'):
-        textArea.value = addChar(textArea.value, currentPressedKey.textContent, cursor, range);
-        textArea.setSelectionRange(cursor + 1, cursor + 1);
+        selection.modify('move', 'left', 'character');
         break;
       case ('ArrowRight'):
-        textArea.value = addChar(textArea.value, currentPressedKey.textContent, cursor, range);
-        textArea.setSelectionRange(cursor + 1, cursor + 1);
+        selection.modify('move', 'right', 'character');
         break;
       case ('Delete'):
         if (cursor === (textArea.value.length) && range === 0) {
